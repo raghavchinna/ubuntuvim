@@ -2,6 +2,7 @@ set nocompatible
 execute pathogen#infect()
 syntax on
 filetype plugin indent on
+filetype on
 
 "Below is the leader key
 :let mapleader = ","
@@ -69,6 +70,7 @@ set foldlevel=99
 nnoremap <space> za
 vnoremap <space> zf
 
+"Automatically open NerdTree when vim is opened.
 autocmd vimenter * NERDTree
 
 autocmd StdinReadPre * let s:std_in=1
@@ -83,22 +85,22 @@ autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
 
 "Below is added specific to python files
 au BufNewFile,BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
     \ set fileformat=unix
 
 "Below is added specific to javascript, html and css files
 au BufNewFile,BufRead *.js, *.html, *.css
-    \ set tabstop=2
-    \ set softtabstop=2
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
     \ set shiftwidth=2
 
 "Below is added to display unessary white spaces
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
 set encoding=utf-8
 
@@ -107,18 +109,18 @@ let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 "python with virtualenv support
-py << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-    project_base_dir = os.environ['VIRTUAL_ENV']
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-EOF
+"py << EOF
+"import os
+"import sys
+"if 'VIRTUAL_ENV' in os.environ:
+"    project_base_dir = os.environ['VIRTUAL_ENV']
+"    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+"    execfile(activate_this, dict(__file__=activate_this))
+"EOF
 
 "Below is added for syntastic
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
@@ -154,3 +156,20 @@ set clipboard=unnamed
 
 let g:solarized_termcolors=256
 
+"Below is added for powerline setup
+"http://www.linuxdeveloper.space/install-vim-powerline/
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
+
+set laststatus=2
+
+"Below is added as part of the jedi-vim
+let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#show_call_signatures = "1"
+
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
+
+"Below is used to run as python from command line
+autocmd FileType python nnoremap <buffer> <F9> :exec '!clear; python' shellescape(@%, 1)<cr>
